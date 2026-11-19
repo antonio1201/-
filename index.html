@@ -121,6 +121,28 @@
     @media(max-width:43rem){.grid{grid-template-columns:1fr;gap:1rem}.top-inner,.shell{width:min(100% - 1.5rem,32rem)}.top-inner{min-height:3.85rem}.shell{padding-top:1.35rem}.intro{margin-bottom:1rem}.dial{width:min(100%,17.5rem);margin-block:.6rem .45rem}.clock,.settings{padding-inline:1rem}.settings{padding-top:1rem}.sequence{padding-bottom:.85rem}.shortcuts{display:none}}
     @media(max-width:25rem){.quiet{min-width:2.65rem}.utility-label{display:none}.dial{width:min(100%,15.4rem)}.dial::after{inset:1.25rem}.clock,.settings{padding-inline:.75rem}.settings-head{margin-bottom:.8rem}}
     @media(max-width:36rem){.focus-view .next{display:none}}
+
+    @media (max-width:43rem) and (orientation:portrait), (max-height:36rem) and (orientation:landscape) {
+      .focus-view .dial{grid-template: auto minmax(0,1fr) / minmax(0,1fr);row-gap:.15rem}
+      .focus-view .dial::before,.focus-view .dial::after{display:none}
+      .focus-view .dial-content{display:contents}
+      .focus-view .phase-tag{grid-area:1 / 1 / 2 / -1}
+      .focus-view .digits-frame{grid-area:2 / 1}
+      .focus-view .ring{
+        display:block;position:static;grid-area:2 / 1;width:100%;height:100%;min-width:0;min-height:0;transform:none;
+      }
+      .focus-view .ring-track{stroke:var(--signal);stroke-width:3;opacity:.55}
+      .focus-view .ring-progress{stroke-width:4;transform-box:view-box;transform-origin:center;transform:rotate(-90deg)}
+      .focus-view .clock[data-warning="true"] .ring-track,.focus-view .clock[data-phase="done"] .ring-track{opacity:.92}
+    }
+    @media (max-width:43rem) and (orientation:portrait) {
+      .focus-view .digits{font-size:min(32.5vw,calc(31vh - 2.8rem));font-size:min(32.5cqw,31.2cqh)}
+    }
+    @media (max-height:36rem) and (orientation:landscape) {
+      .focus-view .dial{grid-template-columns:minmax(0,20%) minmax(0,1fr);column-gap:clamp(.45rem,2vw,1rem)}
+      .focus-view .digits-frame{grid-column:2}
+      .focus-view .digits{font-size:min(27vw,calc(116vh - 9rem));font-size:min(35cqw,116cqh)}
+    }
   </style>
 </head>
 <body>
