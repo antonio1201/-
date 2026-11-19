@@ -91,18 +91,36 @@
     .shortcuts{display:flex;gap:.8rem;flex-wrap:wrap}
     .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
     .focus-view{overflow:hidden}
-    .focus-view .clock{position:fixed;inset:0;z-index:2;min-height:0;max-height:100%;overflow:auto;border:0;border-radius:0;padding:max(1rem,env(safe-area-inset-top)) max(1rem,env(safe-area-inset-right)) max(1rem,env(safe-area-inset-bottom)) max(1rem,env(safe-area-inset-left))}
-    .focus-view .clock-head,.focus-view .actions{width:min(100%,42rem);margin-inline:auto}
-    .focus-view .dial{width:min(76vw,52dvh,34rem);margin-block:.45rem}
-    .focus-view .digits{font-size:clamp(2.2rem,min(14vw,14dvh),9rem)}
+    .focus-view .clock{
+      position:fixed;inset:0 0 auto;z-index:2;height:100vh;height:100dvh;min-height:0;overflow:hidden;
+      display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:.5rem;border:0;border-radius:0;
+      padding:max(.5rem,env(safe-area-inset-top)) max(.65rem,env(safe-area-inset-right))
+        max(.5rem,env(safe-area-inset-bottom)) max(.65rem,env(safe-area-inset-left));
+    }
+    .focus-view .readout{min-width:0}
+    .focus-view .dial{width:100%;height:100%;aspect-ratio:auto;margin:0;min-height:0}
+    .focus-view .dial::before,.focus-view .dial::after{inset:auto 0 0;height:2px;border:0;border-radius:1px}
+    .focus-view .dial::before{background:#3d4439;mask:none;opacity:1}
+    .focus-view .dial::after{background:var(--signal);transform-origin:left;transform:scaleX(calc(1 - var(--offset,0) / 100))}
+    .focus-view .ring,.focus-view .time-caption,.focus-view .sequence{display:none}
+    .focus-view .dial-content{width:100%;height:100%;grid-template-rows:auto minmax(0,1fr);gap:.15rem}
+    .focus-view .digits-frame{container-type:size;display:grid;place-items:center;width:100%;height:100%;min-width:0;min-height:0}
+    .focus-view .digits{
+      font-size:clamp(1.25rem, min(35vw, calc(116vh - 9rem)), 116vh);
+      font-size:min(35cqw,116cqh);line-height:.82;letter-spacing:-.055em;padding-right:.055em;
+      white-space:nowrap;-webkit-text-size-adjust:100%;text-size-adjust:100%;
+    }
+    .focus-view .actions{display:flex;flex-direction:row-reverse;justify-content:space-between}
+    .focus-view .primary,.focus-view .reset{min-height:clamp(2.75rem,8.5vmin,3.25rem);white-space:nowrap}
+    .focus-view .primary{min-width:clamp(7rem,20vw,13rem)}
     .focus-view .exit-focus{display:inline-flex}
     .focus-view .top,.focus-view .intro,.focus-view .settings,.focus-view .bottom{visibility:hidden}
     .clock-head-end{display:flex;align-items:center;gap:.5rem}
     .exit-focus{display:none;min-height:2.25rem;white-space:nowrap}
     @media(max-width:53rem){.top-inner,.shell{width:min(100% - 2rem,47rem)}.grid{grid-template-columns:minmax(0,1fr) minmax(17rem,.87fr);gap:.75rem}.clock,.settings{padding-inline:.9rem}.dial{width:min(100%,17.5rem)}.stepper{gap:.12rem}.number{min-width:3.55rem}}
     @media(max-width:43rem){.grid{grid-template-columns:1fr;gap:1rem}.top-inner,.shell{width:min(100% - 1.5rem,32rem)}.top-inner{min-height:3.85rem}.shell{padding-top:1.35rem}.intro{margin-bottom:1rem}.dial{width:min(100%,17.5rem);margin-block:.6rem .45rem}.clock,.settings{padding-inline:1rem}.settings{padding-top:1rem}.sequence{padding-bottom:.85rem}.shortcuts{display:none}}
-    @media(max-width:25rem){.quiet{min-width:2.65rem}.utility-label{display:none}.dial{width:min(100%,15.4rem)}.dial::after{inset:1.25rem}.clock,.settings{padding-inline:.75rem}.settings-head{margin-bottom:.8rem}.focus-view .next{display:none}}
-    @media(max-height:32rem) and (orientation:landscape){.focus-view .clock{justify-content:center}.focus-view .clock-head{position:absolute;inset:1rem 1rem auto auto;width:auto}.focus-view .clock-head .round-badge,.focus-view .clock-head .next{display:none}.focus-view .readout{flex:0 0 auto}.focus-view .sequence{padding-bottom:.4rem}.focus-view .actions{width:min(68%,25rem)}.focus-view .primary,.focus-view .reset{min-height:2.55rem}.focus-view .dial::after{inset:1.1rem}}
+    @media(max-width:25rem){.quiet{min-width:2.65rem}.utility-label{display:none}.dial{width:min(100%,15.4rem)}.dial::after{inset:1.25rem}.clock,.settings{padding-inline:.75rem}.settings-head{margin-bottom:.8rem}}
+    @media(max-width:36rem){.focus-view .next{display:none}}
   </style>
 </head>
 <body>
@@ -141,7 +159,7 @@
             <svg class="ring" aria-hidden="true" viewBox="0 0 100 100"><circle class="ring-track" cx="50" cy="50" r="47"/><circle class="ring-progress" cx="50" cy="50" r="47" pathLength="100"/></svg>
             <div class="dial-content">
               <span class="phase-tag" id="phase" role="status">就緒</span>
-              <div class="digits" id="digits" role="timer" aria-live="off">02:00</div>
+              <div class="digits-frame"><div class="digits" id="digits" role="timer" aria-live="off">02:00</div></div>
               <span class="time-caption" id="caption">訓練時間</span>
             </div>
           </div>
