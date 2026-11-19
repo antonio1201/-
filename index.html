@@ -355,6 +355,12 @@
 
   function openAudio() {
     try {
+      const session = navigator.audioSession;
+      if (session) session.type = 'playback';
+    } catch {
+      // Some browsers restrict changing the audio session type.
+    }
+    try {
       const AudioEngine = window.AudioContext || window.webkitAudioContext;
       if (!AudioEngine) return;
       if (!audio) {
@@ -412,8 +418,12 @@
     oscillator.stop(start + .105);
   }
 
+  function usesCountdownBeeps(name) {
+    return name === 'prep' || name === 'train';
+  }
+
   function announceStage(name, seconds) {
-    const shortCountdown = name === 'train' && seconds <= 3;
+    const shortCountdown = usesCountdownBeeps(name) && seconds <= 3;
     if (shortCountdown) beep();
     speak(name, shortCountdown ? .12 : 0);
   }
@@ -442,13 +452,18 @@
     if (!storageAvailable) setText($('config-status'), '僅本次有效');
   });
 
+  function previewCountdown(start) {
+    for (let second = 0; second < 3; second += 1) beep(start + second);
+    return start + 3;
+  }
+
   $('sound-test').addEventListener('click', () => {
     openAudio();
     silence();
-    const restAt = speak('train') + .4;
-    const beepAt = restAt + speak('rest', restAt) + .45;
-    for (let i = 0; i < 3; i += 1) beep(beepAt + i);
-    speak('done', beepAt + 3);
+    const trainAt = previewCountdown(0);
+    const restAt = trainAt + speak('train', trainAt) + .4;
+    const finalCountdownAt = restAt + speak('rest', restAt) + .45;
+    speak('done', previewCountdown(finalCountdownAt));
   });
 
   async function keepScreenOn() {
@@ -545,7 +560,7 @@
     const seconds = Math.ceil((deadline - now) / 1000);
     if (changedStage && now - boundary < 750) {
       announceStage(plan[index].name, seconds);
-    } else if (!changedStage && plan[index].name === 'train' && seconds <= 3 && seconds < previousSeconds) {
+    } else if (!changedStage && usesCountdownBeeps(plan[index].name) && seconds <= 3 && seconds < previousSeconds) {
       beep();
     }
     previousSeconds = seconds;
